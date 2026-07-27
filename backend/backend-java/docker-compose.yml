@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  backend-java:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: springboot
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env.example
+    depends_on:
+      - postgres
+    networks:
+      - backend-net
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env.example
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - backend-net
+
+volumes:
+  postgres-data:
+
+networks:
+  backend-net:
+    driver: bridge
