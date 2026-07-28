@@ -39,7 +39,7 @@ public class Photo {
     @Column(nullable = true, name = "place")
     private String place;
 
-    @Column(nullable = true, name = "order")
+    @Column(nullable = true, name = "list_order")
     private Integer order;
 
     @Column(nullable = true, name = "photo_type")

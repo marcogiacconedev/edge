@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+
 import com.backend.backend_java.dto.CreateProjectRequest;
 import com.backend.backend_java.dto.ProjectResponse;
 import com.backend.backend_java.dto.UpdateProjectRequest;
 import com.backend.backend_java.model.Project;
 import com.backend.backend_java.repository.ProjectRepository;
 
+@Service
 public class ProjectService {
     private final ProjectRepository projectRepository;
 

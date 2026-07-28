@@ -25,7 +25,7 @@ public class Project {
     @Column(nullable = true, name = "description")
     private String description;
 
-    @Column(nullable = true, name = "order")
+    @Column(nullable = true, name = "list_order")
     private Integer order;
 
     @Column(nullable = false, name = "created_at")
