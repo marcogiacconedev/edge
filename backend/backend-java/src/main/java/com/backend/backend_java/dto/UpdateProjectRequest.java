@@ -1,14 +1,10 @@
 package com.backend.backend_java.dto;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 import jakarta.validation.constraints.NotBlank;
 
 public class UpdateProjectRequest {
-    @NotBlank(message = "Id missing")
-    private UUID id;
-
     @NotBlank(message = "Title missing")
     private String title;
 
@@ -33,7 +29,4 @@ public class UpdateProjectRequest {
     public LocalDate getUpdatedAt() {
         return updatedAt;
     }
-    public UUID getId() {
-        return id;
-    }    
 }

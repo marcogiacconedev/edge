@@ -19,6 +19,8 @@ import com.backend.backend_java.dto.ProjectResponse;
 import com.backend.backend_java.dto.UpdateProjectRequest;
 import com.backend.backend_java.service.ProjectService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/projects")
 public class ProjectController {
@@ -47,19 +49,20 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<ProjectResponse> createProject(
-        @RequestBody CreateProjectRequest dto,
+        @RequestBody @Valid CreateProjectRequest dto,
         @AuthenticationPrincipal String userId
     ) {
         ProjectResponse projectResponse = projectService.createProject(dto, UUID.fromString(userId));
         return ResponseEntity.ok(projectResponse);
     }
 
-    @PutMapping 
+    @PutMapping("/{projectId}") 
     public ResponseEntity<ProjectResponse> updateProject(
-        @RequestBody UpdateProjectRequest dto,
+        @RequestBody @Valid UpdateProjectRequest dto,
+        @PathVariable UUID projectId,
         @AuthenticationPrincipal String userId
     ) {
-        ProjectResponse projectResponse = projectService.updateProject(dto, UUID.fromString(userId));
+        ProjectResponse projectResponse = projectService.updateProject(dto, projectId, UUID.fromString(userId));
         return ResponseEntity.ok(projectResponse);
     }
 

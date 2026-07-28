@@ -43,8 +43,8 @@ public class ProjectService {
         return new ProjectResponse(project);
     }
 
-    public ProjectResponse updateProject(UpdateProjectRequest dto, UUID userId) {
-        Project project = projectRepository.findById(dto.getId()).orElseThrow(() -> new RuntimeException("Project not found"));
+    public ProjectResponse updateProject(UpdateProjectRequest dto, UUID projectId, UUID userId) {
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
         if (!project.getId().equals(userId)) throw new RuntimeException("Not authorized");
 
         project.setTitle(dto.getTitle());

@@ -1,50 +1,41 @@
-package com.backend.backend_java.model;
+package com.backend.backend_java.dto;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import com.backend.backend_java.model.Photo;
 
-@Entity
-@Table(name = "photos")
-public class Photo {
-    @Id
-    @GeneratedValue
+public class PhotoResponse {
     private UUID id;
-
-    @Column(nullable = false, name = "project_id")
     private UUID projectId;
-
-    @Column(nullable = true, name = "title")
     private String title;
-
-    @Column(nullable = true, name = "description")
     private String description;
-
-    @Lob
-    @Column(name = "photo", columnDefinition = "bytea")
-    private byte[] photo;
-
-    @Column(nullable = true, name = "taken_at")
+    // private byte[] photo;
     private LocalDate takenAt;
-
-    @Column(nullable = true, name = "updated_at")
     private LocalDate updatedAt;
-
-    @Column(nullable = true, name = "place")
     private String place;
-
-    @Column(nullable = true, name = "order")
     private Integer order;
-
-    @Column(nullable = true, name = "photo_type")
     private String photoType;
 
+    public PhotoResponse(Photo photo) {
+        this.id = photo.getId();
+        this.projectId = photo.getProjectId();
+        this.title = photo.getTitle();
+        this.description = photo.getDescription();
+        // this.photo = photo.getPhoto();
+        this.takenAt = photo.getTakenAt();
+        this.updatedAt = photo.getUpdatedAt();
+        this.place = photo.getPlace();
+        this.order = photo.getOrder();
+        this.photoType = photo.getPhotoType();
+    }
+
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
     public UUID getId() {
         return id;
     }
@@ -57,12 +48,12 @@ public class Photo {
     public void setOrder(Integer order) {
         this.order = order;
     }
-    public byte[] getPhoto() {
-        return photo;
-    }
-    public void setPhoto(byte[] photo) {
-        this.photo = photo;
-    }
+    // public byte[] getPhoto() {
+    //     return photo;
+    // }
+    // public void setPhoto(byte[] photo) {
+    //     this.photo = photo;
+    // }
     public String getPhotoType() {
         return photoType;
     }
@@ -92,12 +83,6 @@ public class Photo {
     }
     public void setTitle(String title) {
         this.title = title;
-    }
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
     }
     public LocalDate getUpdatedAt() {
         return updatedAt;

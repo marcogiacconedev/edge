@@ -7,8 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 
 public class CreateProjectRequest {
 
-    @NotBlank(message = "Id missing")
-    private UUID id;
+    @NotBlank(message = "User Id missing")
+    private UUID userId;
 
     @NotBlank(message = "Title missing")
     private String title;
