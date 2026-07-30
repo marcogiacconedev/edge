@@ -9,15 +9,22 @@ import org.springframework.stereotype.Service;
 import com.backend.backend_java.dto.CreateProjectRequest;
 import com.backend.backend_java.dto.ProjectResponse;
 import com.backend.backend_java.dto.UpdateProjectRequest;
+import com.backend.backend_java.model.Photo;
 import com.backend.backend_java.model.Project;
+import com.backend.backend_java.repository.PhotoRepository;
 import com.backend.backend_java.repository.ProjectRepository;
 
 @Service
 public class ProjectService {
     private final ProjectRepository projectRepository;
+    private final PhotoRepository photoRepository;
 
-    public ProjectService(ProjectRepository projectRepository) {
+    public ProjectService(
+        ProjectRepository projectRepository,
+        PhotoRepository photoRepository
+    ) {
         this.projectRepository = projectRepository;
+        this.photoRepository = photoRepository;
     }
 
     public List<ProjectResponse> getProjects() {
@@ -63,7 +70,9 @@ public class ProjectService {
     public void deleteProject(UUID projectId, UUID userId) {
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
         if (!project.getUserId().equals(userId)) throw new RuntimeException("Not authorized");
+        List<Photo> photos = photoRepository.findByProjectId(projectId);
 
+        photoRepository.deleteAllInBatch(photos);
         projectRepository.delete(project);
     }
 }
