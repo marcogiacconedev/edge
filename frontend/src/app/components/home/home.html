@@ -1,0 +1,76 @@
+<app-navbar (onMenuVisibilityChange)="receiveMenuVisibilityStatus($event)" ></app-navbar>
+
+@if (!isMenuVisible) {
+    <div class="content-wrapper">
+        <div class="hero-section">
+            <div class="hero-text-container">
+                <p class="hero-text" >Stillness in <span class="hero-highlighted" >movement</span>.</p>
+                <p class="hero-text" >Intensity in <span class="hero-highlighted" >silence</span>.</p>
+            </div>
+        </div>
+        <div class="hero-section-bars-container">
+            <span class="hero-section-bars">///</span>
+        </div>
+        <div class="main-content">
+            <div class="section-1">
+                <p class="section-1-text">
+                    The edge of a <span class="section-1-text-highlighted">wave<br></span> before it <span class="section-1-text-highlighted">breaks</span>.
+                </p>
+                <p class="section-1-text">
+                    The edge of a <span class="section-1-text-highlighted">shadow<br></span> before it <span class="section-1-text-highlighted">fades.</span>
+                </p>
+                <p class="section-1-text">
+                    The edge of a <span class="section-1-text-highlighted">glance<br></span> before it <span class="section-1-text-highlighted">turns </span>away.
+                </p>
+            </div>
+            <div class="section-2">
+                <div class="section-2-main">
+                    <p class="section-2-main-text">
+                        In between, there is<br>
+                        flow, a constant drift<br>
+                        between here and gone.<br>
+                    </p>
+                </div>
+                <div class="section-2-side">
+                    <p class="section-2-side-text">
+                        <span class="section-2-side-text-highlight">Movement</span> that carries <span class="section-2-side-text-highlight">stillness</span> inside it.<br> <span class="section-2-side-text-highlight">Stillness</span> that is never fully <span class="section-2-side-text-highlight">still</span>.
+                    </p>
+                </div>
+            </div>
+            <div class="main-section-bars-1-container">
+                <span class="main-section-bars-1">///</span>
+            </div>
+            <div class="section-3">
+                <p class="section-3-text">
+                    Not the moment <br> <span class="section-3-text-highlight">before</span> or <span class="section-3-text-highlight">after</span>, 
+                </p>
+
+                <div class="section-3-images-container">
+                    <img class="section-3-image" src="/home-page-image-1.jpg" alt="">
+                    <img class="section-3-image" src="/home-page-image-2.jpg" alt="">
+                    <img class="section-3-image" src="/home-page-image-3.jpg" alt="">
+                </div>
+
+                <p class="section-3-text-2">
+                    but <span class="section-3-text-highlight">the thin line</span> where<br> both exist at once.
+                </p>
+            </div>
+            <div class="section-4">
+                <div class="section-4-image-container">
+                    <img class="section-4-image" src="/home-page-image-4.jpg" alt="">
+                </div>
+                <div class="section-4-bars-container">
+                    <span class="section-4-bars">///</span>
+                </div>
+                <div class="section-4-text-container">
+                    <p class="section-4-text">My photographs live in<br> this in–between.</p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+    <app-footer></app-footer>    
+}
+

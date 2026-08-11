@@ -1,0 +1,76 @@
+<div class="container">
+    <app-go-to-projects></app-go-to-projects>
+    <div class="card m-3 p-3">
+        <div>
+            <h1>{{ editMode ? project.title : 'Creazione di un nuovo progetto'}}</h1>
+        </div>
+        <div class="p-3">
+            <form>
+                <div class="row g-3 mb-4">
+                    <div class="col-4">
+                        <label for="titolo-progetto" class="form-label">Titolo</label>
+                        <input 
+                            [(ngModel)]="project.title"
+                            type="text" 
+                            class="form-control" 
+                            id="titolo-progetto" 
+                            name="titolo-progetto">
+                    </div>
+                    <div class="col-4">
+                        <label for="ordine-progetto" class="form-label">Ordine</label>
+                        <input
+                        [(ngModel)]="project.order"
+                        type="number"
+                        class="form-control"
+                        id="ordine-progetto"
+                        name="ordine-progetto"
+                        min="0"
+                        max="999"
+                        >
+                    </div>
+                    <div class="col-4">
+                        <label for="descrizione-progetto" class="form-label">Descrizione</label>
+                        <textarea 
+                            [(ngModel)]="project.description"
+                            type="text" 
+                            class="form-control" 
+                            id="descrizione-progetto" 
+                            name="descrizione-progetto"></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="photo-image">Immagine thumbnail progetto</label>
+                        <input
+                            (change)="onImageChange($event)" 
+                            class="form-control"
+                            id="photo-image"
+                            name="photo-image"
+                            type="file">
+                    </div>
+                    <div class="col-12 d-flex justify-content-center">
+                        @if (previewImageFromFiles) {
+                            <img class="preview-image" [src]="previewImageFromFiles" alt="preview dell' immagine di copertina del progetto">
+                        } @else if (previewUrlFromProject) {
+                            <img class="preview-image" [src]="previewUrlFromProject" alt="preview dell' immagine di copertina del progetto">
+                        } @else {
+                            <p>Nessuna immagine da visualizzare</p>
+                        }
+                    </div>
+                </div>
+
+                <div class="p-3">
+                    <button type="button" (click)="submit()" class="btn btn-success float-end" [disabled]="!isFormComplete(this.project)">submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@if (isSubmitModalOpen) {
+    <app-modal-creation
+    [isLoading]="isSubmitLoading"
+    [loadingCompleted]="submitCompleted"
+    [loadingSuccess]="submitSuccess"
+    [loadingMessage]="submitLoadingMessage"
+    [resultMessage]="submitResultMessage"
+    ></app-modal-creation>
+}
+

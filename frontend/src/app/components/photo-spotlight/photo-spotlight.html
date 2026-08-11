@@ -1,0 +1,11 @@
+<div class="photo-spotlight-container">
+    <div class="header-container">
+        <div class="header">
+            <h2 class="header-text ruotata">{{ photo.title }}</h2>
+            <p class="description ruotata">{{ photo.description }}</p>
+        </div>
+    </div>
+    <div class="photo-container" >
+        <img class="photo" src="{{getPhotoImageUrl(photo.imageUrl)}}" alt="photo">
+    </div>
+</div>

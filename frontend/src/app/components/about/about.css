@@ -1,0 +1,38 @@
+.about-text-container {
+    height: calc(100vh - 31px);
+    
+}
+
+.about-text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-text {
+    font-weight: 300;
+    width: 65%;
+    margin-bottom: 10px;
+}
+
+.about-text-bars {
+    align-self: flex-end;
+    margin-right: 30px;
+    font-size: 12px;
+}
+
+@media (min-width: 600px) {
+    .about-text {
+        font-size: 1.15rem;
+    }
+
+    .about-text-bars {
+        display: block;
+        align-self: flex-start;
+        font-size: 2rem;
+        padding-top: 2rem;
+        width: 65%;
+        margin: 0 auto;
+    }
+}

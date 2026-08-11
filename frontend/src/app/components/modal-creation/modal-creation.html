@@ -1,0 +1,25 @@
+<div style="position: fixed; top: calc(10vh); left: calc(50vw - 185px); text-align: center;">
+    <div class="card p-5" style="width: 370px;">
+        @if (isLoading) {
+            <div class="w-100 h-100 d-flex justify-content-center align-itens-center">
+                <div>
+                    <i class="fa-solid fa-spinner spinner"></i>
+                    <p>Caricamento...</p>
+                </div>
+            </div>
+        }  
+        @else if (loadingCompleted) {
+            <div class="w-100 h-100 d-flex justify-content-center align-itens-center">
+                <div>
+                    @if (loadingSuccess) {
+                        <i class="fa-solid fa-circle-check loading-result loading-success"></i>
+                    }
+                    @else {
+                        <i class="fa-regular fa-circle-xmark loading-result loading-fail"></i>
+                    }
+                    <p>{{ loadingMessage }}</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>

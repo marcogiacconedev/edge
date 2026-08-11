@@ -1,0 +1,35 @@
+<nav>
+    @if (!isMenuVisible) {
+        <div class="logo">
+            ///edge
+        </div>
+
+        <div class="hamburger-icon-container">
+            <a (click)="openMenu()">
+                <img class="hamburger-icon navbar-icon" src="icons/hamburger-menu-icon.png" alt="">
+            </a>
+        </div>
+    } @else {
+        <div class="menu-cross-container">
+            <a class="navbar-icon" (click)="closeMenu()">
+                <i class="menu-cross fa-solid fa-xmark"></i>
+            </a>
+        </div>
+    }
+</nav>
+
+@if (isMenuVisible) {
+    <div class="menu">
+        <div class="menu-list-container">
+            <ul class="menu-list">
+                <li class="menu-list-item" (click)="goToHomePage()">Home</li>
+                <li class="menu-list-item" (click)="goToAboutPage()">About</li>
+                <li class="menu-list-item" (click)="goToProjectsPage()">Projects</li>
+                <li class="menu-list-item" (click)="goToLogin()">Login</li>
+                <li class="menu-list-item">Shop</li>
+            </ul>
+        </div>
+    </div>
+}
+
+

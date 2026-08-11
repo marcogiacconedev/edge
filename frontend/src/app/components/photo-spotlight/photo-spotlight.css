@@ -1,0 +1,41 @@
+.photo-spotlight-container {
+    margin-bottom: 35px;
+    display: flex;
+}
+
+.header {
+    display: flex;
+    justify-content: end;
+}
+
+.header-container {
+    width: 15vw;
+    display: flex;
+    align-items: self-start;
+    justify-content: end;
+}
+
+.header-text {
+    font-size: 10.5px;
+    text-align: right;
+}
+
+.description {
+    font-size: 10.5px;
+    margin-bottom: -15.5px;
+}
+
+.photo-container {
+    text-align: right;
+    width: 85vw;
+}
+.photo {
+    width: 100%;
+}
+
+.ruotata {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;   /* mantiene le lettere leggibili */
+    transform: rotate(-180deg);
+    white-space: nowrap;
+}

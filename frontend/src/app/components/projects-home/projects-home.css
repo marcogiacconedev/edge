@@ -1,0 +1,39 @@
+.section-1-main {
+    margin-left: 20px;
+}
+
+.section-1-text {
+    margin-top: 30px;
+    max-width: 60%;
+    font-weight: 300;
+}
+
+.section-1-text-highlighted {
+    font-weight: bold;
+}
+
+.projects-text-bars {
+    margin-top: 3rem;
+}
+
+.section-2-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+}
+
+.projects-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 5rem;
+}
+
+@media (min-width:600px) {
+    .section-1-text {
+        font-size: 1.2rem;
+        max-width: 70%;
+    }
+    .projects-text-bars {
+        font-size: 1.5rem;
+    }
+}

@@ -1,0 +1,62 @@
+<div class="container">
+    <app-go-to-projects></app-go-to-projects>
+    <div class="card m-3 p-3">
+        <div class="mb-2">
+            <h1 class="header">Le foto del progetto {{ projectId }}</h1>
+        </div>
+        <div class="list-container">
+            <table class="table">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="px-3">ID</th>
+                        <th class="px-3">Titolo</th>
+                        <th class="px-3">Catturata il</th>
+                        <th class="px-3">Descrizione</th>
+                        <th class="px-3">Ordine</th>
+                        <th class="px-3">Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (isPhotosLoading) {
+                        <tr class="p-3 text-center">
+                            <td colspan="100%">Caricamento...</td>
+                        </tr>
+                    } @else {
+                        @if (photos.length < 1) {
+                            <tr class="p-3 text-center">
+                                <td colspan="100%">Questo progetto non contiene fotografie</td>
+                            </tr>
+                        } @else {
+                            @for (photo of photos; track $index) {
+                                <tr>
+                                    <td class="p-3">{{ photo.id }}</td>
+                                    <td class="p-3">{{ photo.title }}</td>
+                                    <td class="p-3">{{ photo.takenAt | date:'dd/MM/yyyy' }}</td>
+                                    <td class="p-3">{{ photo.description }}</td>
+                                    <td class="p-3">{{ photo.order }}</td>
+                                    <td class="p-3">
+                                        <i (click)="editPhoto(photo)" class="action-icon fa-solid fa-pen px-1"></i>
+                                        <i (click)="openWarningModal(photo)" class="action-icon fa-solid fa-trash px-1"></i>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+            <div class="container">
+                <button class="btn btn-success p-2 m-3 float-end" (click)="addNewPhoto()">Aggiungi foto</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="display: flex;" [ngClass]="!isModalOpen ? 'd-none' : ''">
+    <app-modal-warning
+    [isLoading]="isDeletionLoading"
+    [loadingCompleted]="deletionLoadingCompleted"
+    [loadingMessage]="deletePhotoMessage"
+    [loadingSuccess]="deletionSuccessful"
+    [warning]="`Sei sicur* di voler eliminare definitivamente la foto '${photoToDelete.title}?'`"
+    (action)="receiveModalAction($event)"
+    ></app-modal-warning>
+</div>

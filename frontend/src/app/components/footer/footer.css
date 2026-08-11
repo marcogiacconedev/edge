@@ -1,0 +1,19 @@
+footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-email-icon {
+    width: 30px;
+}
+
+.footer-text {
+    font-size: 0.6rem;
+}
+
+.footer-logo {
+    font-weight: bold;
+    margin-bottom: 20px;
+}

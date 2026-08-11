@@ -1,0 +1,23 @@
+<app-navbar></app-navbar>
+<div class="projects-home-container">
+    <div class="section-1-container">
+        <div class="section-1-main">
+            <p class="section-1-text">My <span class="section-1-text-highlighted">projects</span> are born from watching the world exist on its own—moving, pausing, breathing.</p>
+            <p class="section-1-text">Waves fold and unfold against the shore. Surfers contemplate the ocean as they ride, letting themselves be carried while honouring its rhythm.</p>
+            <p class="section-1-text">People cross paths, brush shoulders, drift apart.</p>
+            <p class="section-1-text">A shadow stretches, a bird slices the sky, a laugh dissolves into the wind.</p>
+            <p class="projects-text-bars">///</p>
+        </div>
+        <div class="section-1-side"></div>
+    </div>
+    <div class="section-2-container">
+        <div class="projects-container">
+            @for (project of projects; track $index) {
+                <app-project-thumbnail
+                [project]="project"
+                ></app-project-thumbnail>
+            }
+        </div>
+    </div>
+</div>
+<app-footer></app-footer>

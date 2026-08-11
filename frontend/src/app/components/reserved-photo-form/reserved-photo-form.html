@@ -1,0 +1,83 @@
+<div class="container">
+    <app-go-to-photos
+    [projectId]="this.photo.projectId"
+    ></app-go-to-photos>
+    <div class="card m-3 p-3">
+        <div class="d-flex">
+            <h1>Aggiunta fotografia</h1>
+        </div>
+        <form class="row g-3 mb-4">
+            <div class="form-group col-3">
+                <label class="form-label" for="titolo-photo">Titolo</label>
+                <input 
+                    [(ngModel)]="photo.title"
+                    class="form-control" 
+                    type="text" 
+                    id="titolo-photo" 
+                    name="titolo-photo">
+            </div>
+            <div class="form-group col-3">
+                <label class="form-label" for="posto-photo">Scattata il</label>
+                <input 
+                    [(ngModel)]="photo.takenAt"
+                    class="form-control" 
+                    type="date" 
+                    id="posto-photo" 
+                    name="posto-photo">
+            </div>
+            <!-- dropdown per selezionare l' ordine della foto -->
+            <div class="col-3">
+                <label class="form-label" for="order-select">Seleziona l' ordine della foto</label>
+                <input type="number" 
+                    [(ngModel)]="photo.order" 
+                    class="form-control" 
+                    name="order-select" 
+                    id="order-select" 
+                    [required]="true">
+            </div>
+            <div class="form-group col-3">
+                <label class="form-label" for="categoria-photo">Descrizione</label>
+                <textarea 
+                    [(ngModel)]="photo.description"
+                    [required]="true"
+                    class="form-control" 
+                    type="text" 
+                    id="categoria-photo" 
+                    name="categoria-photo"></textarea>
+            </div>
+            <div class="form-group col-12">
+                <label class="form-label" for="photo-image">Fotografia</label>
+                <input
+                    (change)="onImageChange($event)"
+                    class="form-control"
+                    id="photo-image"
+                    name="photo-image"
+                    type="file">
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                @if (previewImageFromFiles) {
+                    <img class="preview-image" [src]="previewImageFromFiles" alt="preview dell' immagine di copertina del progetto">
+                } @else if (previewUrlFromPhoto) {
+                    <img class="preview-image" [src]="previewUrlFromPhoto" alt="preview dell' immagine di copertina del progetto">
+                } @else {
+                    <p>Nessuna immagine da visualizzare</p>
+                }
+            </div>
+        </form>
+        <div class="container mt-3">
+            <div class="float-end">
+                <button type="submit" class="btn btn-success" (click)="submit()" [disabled]="!isFormComplete(this.photo)">Aggiungi foto al progetto</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (isSubmitModalOpen) {
+    <app-modal-creation
+    [isLoading]="isSubmitLoading"
+    [loadingCompleted]="submitCompleted"
+    [loadingSuccess]="submitSuccess"
+    [loadingMessage]="submitLoadingMessage"
+    [resultMessage]="submitResultMessage"
+    ></app-modal-creation>
+}

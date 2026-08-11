@@ -1,0 +1,81 @@
+.login-container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    width: 300px;
+    height: 500px;
+    border: 1px solid black;
+}
+
+.login-header {
+    text-align: center;
+}
+
+.username-container, .password-container {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.login {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.login:hover {
+  background-color: #222; /* un nero leggermente più chiaro al hover */
+}
+
+.submit-container {
+  display: flex;
+  justify-content: center;
+}
+
+.username-container input,
+.password-container input {
+  width: 80%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.username-container input:focus,
+.password-container input:focus {
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.login-card {
+  width: 300px;
+  min-height: 400px;
+  padding: 2rem 1.5rem;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #000;
+}

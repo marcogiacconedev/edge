@@ -1,0 +1,17 @@
+<app-navbar></app-navbar>
+<div class="project-container">
+    <div class="project">
+        <div class="project-header">
+            <h1 class="header">{{ project.title }}</h1>
+            <p class="header-text">{{ project.description }}</p>
+        </div>
+        <div class="project-content">
+            @for (photo of photos; track $index) {
+                <app-photo-spotlight
+                [photo]="photo"
+                ></app-photo-spotlight>
+            }
+        </div>
+    </div>
+</div>
+<app-footer></app-footer>
