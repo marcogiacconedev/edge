@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,7 +25,7 @@ public class Photo {
     @Column(nullable = true, name = "description")
     private String description;
 
-    @Lob
+    // @Lob
     @Column(name = "photo", columnDefinition = "bytea")
     private byte[] photo;
 

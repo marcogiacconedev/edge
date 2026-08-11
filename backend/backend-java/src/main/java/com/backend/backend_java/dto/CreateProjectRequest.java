@@ -1,14 +1,11 @@
 package com.backend.backend_java.dto;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class CreateProjectRequest {
-
-    @NotBlank(message = "User Id missing")
-    private UUID userId;
 
     @NotBlank(message = "Title missing")
     private String title;
@@ -16,13 +13,13 @@ public class CreateProjectRequest {
     @NotBlank(message = "Description missing")
     private String description;
 
-    @NotBlank(message = "Order missing")
+    @NotNull(message = "Order missing")
     private Integer order;
 
-    @NotBlank(message = "Creation date missing")
+    @NotNull(message = "Creation date missing")
     private LocalDate createdAt;
 
-    @NotBlank(message = "Update date missing")
+    @NotNull(message = "Update date missing")
     private LocalDate updatedAt;
 
     public LocalDate getCreatedAt() {

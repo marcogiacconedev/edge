@@ -76,7 +76,7 @@ public class PhotoController {
     public ResponseEntity<PhotoResponse> updatePhoto(
         @PathVariable UUID photoId,
         @RequestPart("data") @Valid UpdatePhotoRequest dto,
-        @RequestPart(value = "file", required = false) MultipartFile file,
+        @RequestPart(value = "file", required = true) MultipartFile file,
         @AuthenticationPrincipal String userId
     ) throws IOException {
         PhotoResponse photoResponse = photoService.updatePhoto(photoId, dto, file, UUID.fromString(userId));
