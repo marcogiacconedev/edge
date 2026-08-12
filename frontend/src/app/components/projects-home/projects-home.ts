@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Navbar } from "../navbar/navbar";
 import { Footer } from "../footer/footer";
-import { Supabase } from '../../services/supabase-service/supabase';
-import { blankPhoto } from '../../utils/blank-objects';
-import { Photo, Project } from '../../model/model';
+import { Project } from '../../model/model';
 import { MapService } from '../../services/map-service/map-service';
 import { ProjectThumbnail } from '../project-thumbnail/project-thumbnail';
 import { orderProjectArray } from '../../utils/utils';
+import { ProjectService } from '../../services/project-service/project-service';
+import { ProjectResponse } from '../../model/dto';
 
 @Component({
   selector: 'app-projects-home',
@@ -19,8 +19,7 @@ export class ProjectsHome implements OnInit {
   projects!: Project[];
 
   constructor(
-    private supabase: Supabase,
-    private mapService: MapService
+    private projectService: ProjectService,
   ) {}
 
   ngOnInit(): void {
@@ -29,11 +28,10 @@ export class ProjectsHome implements OnInit {
 
   async getProjects(): Promise<void> {
     try {
-      const response = await this.supabase.getProjects();
-      this.projects = this.mapService.mapProject(response.data);
-      this.projects = orderProjectArray(this.projects);
+      const response: ProjectResponse[] = await this.projectService.getProjects();
+      this.projects = response.map(responseProject => {return new Project(responseProject)});
     } catch (error) {
-      console.log(error);
-    }
+      throw error;
+    } 
   }
 }

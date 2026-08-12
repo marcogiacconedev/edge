@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Project } from '../../model/model';
-import { Supabase } from '../../services/supabase-service/supabase';
 import { MapService } from '../../services/map-service/map-service';
 import { DatePipe, NgClass } from '@angular/common';
 import { Router } from '@angular/router';
 import { ModalWarning } from "../modal-warning/modal-warning";
 import { emptyProject } from '../../utils/blank-objects';
 import { orderProjectArray } from '../../utils/utils';
+import { ProjectService } from '../../services/project-service/project-service';
+import { ProjectResponse } from '../../model/dto';
+import { AuthService } from '../../services/auth-service/auth-service';
 
 
 @Component({
@@ -26,8 +28,8 @@ export class ReservedProjects implements OnInit {
   deletionLoadingCompleted: boolean = false;
   deletionSuccessful: boolean = true;
   constructor(
-    private supabase: Supabase,
-    private mapService: MapService,
+    private projectService: ProjectService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -38,13 +40,10 @@ export class ReservedProjects implements OnInit {
   async getProjects(): Promise<void> {
     try {
       this.isProjectsLoading = true;
-      const response = await this.supabase.getProjects();
-      if (response.status === 200) {
-        this.projects = this.mapService.mapProject(response.data);
-        this.projects = orderProjectArray(this.projects);
-      }
+      const response: ProjectResponse[] = await this.projectService.getProjects();
+      this.projects = response.map(responseProject => {return new Project(responseProject)});
     } catch (error) {
-      console.log(error);
+      throw error;
     } finally {
       this.isProjectsLoading = false;
     }
@@ -88,27 +87,16 @@ export class ReservedProjects implements OnInit {
   async deleteProject(project: Project): Promise<void> {
     try {
       this.isDeletionLoading = true;
-      const response = await this.supabase.deleteProject(project.id);     //cancella i metadati del progetto
-      if (response.status === 200){
-        this.deletionSuccessful = true;
-        this.deleteProjectMessage = 'Eliminazione avvenuta con successo!';
-      } else {
-        this.deletionSuccessful = false;
-        this.deleteProjectMessage = 'Eliminazione non riuscita :(';
-      }
-  
-      await this.supabase.deleteProjectImages(project.id);                //cancella le immagini dal progetto (storage)
-      await this.supabase.deleteImage(project.coverImageUrl);             //cancella la cover del progetto (storage)
-      await this.supabase.deleteProjectPhotos(project.id);                //cancella le foto del progetto (metadati)
+      const response = await this.projectService.deleteProject(project.id);     //cancella i metadati del progetto
     } catch (error) {
-      console.log(error);
+      throw error;
     } finally {
       this.closeWarningModal();
     } 
   }
 
   logOut(): void {
-    this.supabase.signOut();
+    this.authService.logout();
     this.router.navigateByUrl('/reserved');
   }
 }

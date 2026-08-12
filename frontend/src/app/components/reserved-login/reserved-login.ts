@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Supabase } from '../../services/supabase-service/supabase';
+import { AuthService } from '../../services/auth-service/auth-service';
+import { LoginRequest, LoginResponse } from '../../model/dto';
 
 @Component({
   selector: 'app-reserved-login',
@@ -16,26 +17,34 @@ export class ReservedLogin implements OnInit{
   error = ''
 
   constructor(
-    private supabase: Supabase,
+    private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    if (this.supabase.isUserLoggedIn()) {
+    if (this.authService.isUserAuthenticated()) {
       this.router.navigateByUrl('/reserved/projects');
     }
   }
 
   async login(): Promise<void> {
-    const isUserLoggedIn: boolean = await this.supabase.signIn(
-      this.email,
-      this.password
-    )
-    console.log('is user logged in ', isUserLoggedIn);
-    if (isUserLoggedIn) {
+
+    const dto: LoginRequest = {
+      username: this.email,
+      password: this.password
+    }
+
+    try {
+      const data: LoginResponse = await this.authService.login(dto);
+      console.log(data);
+    } catch (error) {
+      throw error;
+    }
+
+    if (this.authService.isUserAuthenticated()) {
       this.router.navigate(['/reserved/projects'])
     } else {
-      this.error = 'Email o password non corretti!';
+      this.error = 'Non è stato possibile effettuare il login :(';
     }
   }
 

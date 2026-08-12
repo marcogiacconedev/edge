@@ -3,11 +3,11 @@ import { blankPhoto } from '../../utils/blank-objects';
 import { Photo } from '../../model/model';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Supabase } from '../../services/supabase-service/supabase';
 import { MapService } from '../../services/map-service/map-service';
 import { GoToPhotos } from "../buttons/go-to-photos/go-to-photos";
 import { isOnlyNumbers } from '../../utils/utils';
 import { ModalCreation } from '../modal-creation/modal-creation';
+import { AuthService } from '../../services/auth-service/auth-service';
 
 @Component({
   selector: 'app-reserved-photo-form',
@@ -36,7 +36,8 @@ export class ReservedPhotoForm implements OnInit {
 
   constructor(
     private router: Router,
-    private supabase: Supabase,
+    private authService: AuthService,
+    private photoService: PhotoService,
     private mapService: MapService
   ) {
     this.photo = structuredClone(blankPhoto);
@@ -88,7 +89,7 @@ export class ReservedPhotoForm implements OnInit {
   }
 
   async getNewId(): Promise<void> {
-    const newId: number = await this.supabase.getNewPhotoId();
+    const newId: number = await this.photoService.getNewPhotoId();
     if (newId !== 0) {
       this.photo.id = newId;
     }
@@ -97,7 +98,7 @@ export class ReservedPhotoForm implements OnInit {
   async getPhoto(photoId: number): Promise<void> {
     //chiama progetto e controlla se esiste
     try {
-      const response = await this.supabase.getProjectById(this.photo.projectId);
+      const response = await this.photoService.getProjectById(this.photo.projectId);
       if (response && response.data && response.data[0]) {
         this.projectId = response.data[0].id;
       } else {
@@ -110,7 +111,7 @@ export class ReservedPhotoForm implements OnInit {
 
     //chiama foto e controlla se esiste
     try {
-      const response = await this.supabase.getPhotoById(photoId);
+      const response = await this.photoService.getPhotoById(photoId);
       if (response && response.data && response.data[0]) {
         this.photo = this.mapService.mapPhoto(response.data)[0];
         if (this.photo && this.photo.takenAt) {   //formatta la data in modo compatibile con il date picker del browser
@@ -129,7 +130,7 @@ export class ReservedPhotoForm implements OnInit {
     } catch (error) {
       console.log(error);
     } finally {
-      this.previewUrlFromPhoto = this.supabase.getImagePublicUrl(this.photo?.imageUrl)
+      this.previewUrlFromPhoto = this.photoService.getImagePublicUrl(this.photo?.imageUrl)
     }
   }
 
@@ -159,7 +160,7 @@ export class ReservedPhotoForm implements OnInit {
     let imageUrl!: string;
     if (this.imageToAdd) {
       try {
-        imageUrl = await this.supabase.createImage(this.imageToAdd);
+        imageUrl = await this.photoService.createImage(this.imageToAdd);
         if (imageUrl) this.photo.imageUrl = imageUrl;
       } catch (error) {
         console.log(error);
@@ -168,16 +169,16 @@ export class ReservedPhotoForm implements OnInit {
   }
 
   async createNewPhoto(): Promise<void> {
-    await this.supabase.createNewPhoto(this.photo, this.photo.projectId);
+    await this.photoService.createNewPhoto(this.photo, this.photo.projectId);
   }
 
   async deletePhotoImage(): Promise<void> {
-    await this.supabase.deleteImage(this.photo.imageUrl);
+    await this.photoService.deleteImage(this.photo.imageUrl);
   }
 
   async editPhoto(): Promise<void> {
     try {
-      const response = await this.supabase.editPhoto(this.photo);
+      const response = await this.photoService.editPhoto(this.photo);
       console.log(response);
     } catch (error) {
       console.log(error);

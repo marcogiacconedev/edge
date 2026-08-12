@@ -1,23 +1,31 @@
 // model.ts
 
+import { ProjectResponse } from "./dto";
+
 export interface User {
   id: number;
   name: string;
   email: string;
-  passwordHash: string; // mai salvare password in chiaro
 }
 
-export interface Project {
-  id: number;
-  userId: number;
-  title: string;
-  description?: string;
-  coverImageUrl: string;
+export class Project {
   createdAt: Date;
+  description: string;
+  id: string;
+  order: number;
+  title: string;
   updatedAt: Date;
-  order?: number;
-  photos: Photo[]; // relazione uno-a-molti con Photo
-  categories?: Category[]; // opzionale
+  userId: string;
+
+  constructor(projectResponse: ProjectResponse) {
+    this.createdAt = new Date(projectResponse.createdAt);
+    this.description = projectResponse.description;
+    this.id = projectResponse.id;
+    this.order = projectResponse.order;
+    this.title = projectResponse.title;
+    this.updatedAt = new Date(projectResponse.updatedAt);
+    this.userId = projectResponse.userId;
+  }
 }
 
 export interface Photo {
