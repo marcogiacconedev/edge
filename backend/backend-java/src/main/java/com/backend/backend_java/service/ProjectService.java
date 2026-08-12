@@ -12,20 +12,25 @@ import com.backend.backend_java.dto.ProjectResponse;
 import com.backend.backend_java.dto.UpdateProjectRequest;
 import com.backend.backend_java.model.Photo;
 import com.backend.backend_java.model.Project;
+import com.backend.backend_java.model.ProjectThumbnail;
 import com.backend.backend_java.repository.PhotoRepository;
 import com.backend.backend_java.repository.ProjectRepository;
+import com.backend.backend_java.repository.ProjectThumbnailRepository;
 
 @Service
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final PhotoRepository photoRepository;
+    private final ProjectThumbnailRepository projectThumbnailRepository;
 
     public ProjectService(
         ProjectRepository projectRepository,
-        PhotoRepository photoRepository
+        PhotoRepository photoRepository,
+        ProjectThumbnailRepository projectThumbnailRepository
     ) {
         this.projectRepository = projectRepository;
         this.photoRepository = photoRepository;
+        this.projectThumbnailRepository = projectThumbnailRepository;
     }
 
     public List<ProjectResponse> getProjects() {
@@ -72,7 +77,9 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
         if (!project.getUserId().equals(userId)) throw new RuntimeException("Not authorized");
         List<Photo> photos = photoRepository.findByProjectId(projectId);
+        ProjectThumbnail thumbnail = projectThumbnailRepository.findByProjectId(projectId);
 
+        projectThumbnailRepository.delete(thumbnail);
         photoRepository.deleteAllInBatch(photos);
         projectRepository.delete(project);
     }

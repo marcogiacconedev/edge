@@ -46,4 +46,18 @@ public class ProjectThumbnailService {
 
         return new ProjectThumbnailResponse(projectThumbnail);        
     }
+
+    public ProjectThumbnailResponse updateThumbnail(UUID projectId, MultipartFile file, UUID userId) throws IOException {
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
+        if (!project.getUserId().equals(userId)) throw new RuntimeException("Not Authorized");        
+        if (file.getContentType() == null || !file.getContentType().startsWith("image/")) throw new RuntimeException("File must be an image");        
+        
+        ProjectThumbnail thumbnail = projectThumbnailRepository.findByProjectId(projectId);
+        thumbnail.setPhoto(file.getBytes());
+        thumbnail.setPhotoType(file.getContentType());
+        
+        projectThumbnailRepository.save(thumbnail);
+
+        return new ProjectThumbnailResponse(thumbnail);
+    } 
 }

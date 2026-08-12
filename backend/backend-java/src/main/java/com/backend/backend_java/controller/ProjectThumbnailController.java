@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,5 +45,15 @@ public class ProjectThumbnailController {
     ) throws IOException {
         ProjectThumbnailResponse projectThumbnailResponse = projectThumbnailService.createThumbnail(projectId, file, UUID.fromString(userId));
         return ResponseEntity.ok(projectThumbnailResponse);
+    }
+
+    @PutMapping(value = "/{projectId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProjectThumbnailResponse> updateThumbnail(
+        @PathVariable UUID projectId,
+        @RequestPart("file") MultipartFile file,
+        @AuthenticationPrincipal String userId
+    ) throws IOException {
+        ProjectThumbnailResponse thumbnail = projectThumbnailService.updateThumbnail(projectId, file, UUID.fromString(userId));
+        return ResponseEntity.ok(thumbnail);
     }
 }
