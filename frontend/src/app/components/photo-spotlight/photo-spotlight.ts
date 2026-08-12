@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { Photo } from '../../model/model';
-import { Supabase } from '../../services/supabase-service/supabase';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 @Component({
   selector: 'app-photo-spotlight',
@@ -9,17 +11,6 @@ import { Supabase } from '../../services/supabase-service/supabase';
   styleUrl: './photo-spotlight.css'
 })
 export class PhotoSpotlight {
-
   @Input() photo!: Photo;
-
-  constructor(
-    private supabase: Supabase
-  ) {}
-
-  getPhotoImageUrl(coverImageFilePath: string): string {
-    let coverImageUrl: string = '';
-    coverImageUrl = this.supabase.getImagePublicUrl(coverImageFilePath);
-
-    return coverImageUrl;
-  }
+  photoUrl?: string = process.env['API_BASE_URL'];
 }

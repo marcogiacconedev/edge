@@ -1,6 +1,6 @@
 // model.ts
 
-import { ProjectResponse } from "./dto";
+import { PhotoResponse, ProjectResponse } from "./dto";
 
 export interface User {
   id: number;
@@ -28,18 +28,28 @@ export class Project {
   }
 }
 
-export interface Photo {
-  id: number;
-  projectId: number; // relazione con Project
-  title?: string;
-  description?: string;
-  imageUrl: string;
-  takenAt?: string;
-  place?: string;
-  order?: number; // per ordinare le foto nel progetto
-  photoType?: string; // potenzialmente, per cambiare la visualizzazione di alcune foto
-                      // quando le si guardano all' interno di un progetto (NON ANCORA IMPLEMENTATA)
-  deleted: boolean
+export class Photo {
+  id: string;
+  projectId: string;
+  title: string;
+  description: string;
+  takenAt: Date;
+  updatedAt: Date;
+  place: string;
+  order: number;
+  photoType: string;
+
+  constructor(photoResponse: PhotoResponse) {
+    this.id = photoResponse.id;
+    this.projectId = photoResponse.projectId;
+    this.title = photoResponse.title;
+    this.description = photoResponse.description;
+    this.takenAt = new Date(photoResponse.takenAt);
+    this.updatedAt = new Date(photoResponse.updatedAt);
+    this.place = photoResponse.place;
+    this.order = photoResponse.order;
+    this.photoType = photoResponse.photoType;
+  }
 }
 
 export interface Category {

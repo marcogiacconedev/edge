@@ -16,3 +16,15 @@ export interface ProjectResponse {
     updatedAt: string;
     userId: string;
 }
+
+export interface PhotoResponse {
+    id: string;
+    projectId: string;
+    title: string;
+    description: string;
+    takenAt: string;
+    updatedAt: string;
+    place: string;
+    order: number;
+    photoType: string;
+}
