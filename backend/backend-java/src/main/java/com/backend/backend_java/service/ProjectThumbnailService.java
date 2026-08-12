@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.backend.backend_java.dto.CreateProjectThumbnailRequest;
 import com.backend.backend_java.dto.ProjectThumbnailResponse;
 import com.backend.backend_java.model.Project;
 import com.backend.backend_java.model.ProjectThumbnail;
@@ -15,8 +14,16 @@ import com.backend.backend_java.repository.ProjectThumbnailRepository;
 
 @Service
 public class ProjectThumbnailService {
-    private ProjectThumbnailRepository projectThumbnailRepository;
-    private ProjectRepository projectRepository;
+    private final ProjectThumbnailRepository projectThumbnailRepository;
+    private final ProjectRepository projectRepository;
+
+    public ProjectThumbnailService(
+        ProjectThumbnailRepository projectThumbnailRepository,
+        ProjectRepository projectRepository
+    ) {
+        this.projectThumbnailRepository = projectThumbnailRepository;
+        this.projectRepository = projectRepository;
+    }
 
     public ProjectThumbnail getProjectThumbnailEntity(UUID projectId) {
         return projectThumbnailRepository.findByProjectId(projectId);
@@ -24,7 +31,6 @@ public class ProjectThumbnailService {
 
     public ProjectThumbnailResponse createThumbnail(
         UUID projectId,
-        CreateProjectThumbnailRequest dto,
         MultipartFile file,
         UUID userId
     ) throws IOException {

@@ -14,17 +14,19 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.backend.backend_java.dto.CreateProjectThumbnailRequest;
 import com.backend.backend_java.dto.ProjectThumbnailResponse;
 import com.backend.backend_java.model.ProjectThumbnail;
 import com.backend.backend_java.service.ProjectThumbnailService;
 
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/projectthumbnails")
 public class ProjectThumbnailController {
-    private ProjectThumbnailService projectThumbnailService;
+    private final ProjectThumbnailService projectThumbnailService;
+
+    public ProjectThumbnailController(ProjectThumbnailService projectThumbnailService) {
+        this.projectThumbnailService = projectThumbnailService;
+    }
     
     @GetMapping("/{projectId}/file")
     public ResponseEntity<byte[]> getProjectThumbnailFile(@PathVariable UUID projectId) {
@@ -37,11 +39,10 @@ public class ProjectThumbnailController {
     @PostMapping(value="/{projectId}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProjectThumbnailResponse> createThumbnail(
         @AuthenticationPrincipal String userId,
-        @RequestPart("data") @Valid CreateProjectThumbnailRequest dto,
         @RequestPart("file") MultipartFile file,
         @PathVariable UUID projectId
     ) throws IOException {
-        ProjectThumbnailResponse projectThumbnailResponse = projectThumbnailService.createThumbnail(projectId, dto, file, UUID.fromString(userId));
+        ProjectThumbnailResponse projectThumbnailResponse = projectThumbnailService.createThumbnail(projectId, file, UUID.fromString(userId));
         return ResponseEntity.ok(projectThumbnailResponse);
     }
 }
