@@ -25,7 +25,6 @@ public class Photo {
     @Column(nullable = true, name = "description")
     private String description;
 
-    // @Lob
     @Column(name = "photo", columnDefinition = "bytea")
     private byte[] photo;
 
