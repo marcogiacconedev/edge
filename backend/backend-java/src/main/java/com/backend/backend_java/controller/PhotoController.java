@@ -83,7 +83,7 @@ public class PhotoController {
         return ResponseEntity.ok(photoResponse);
     }
 
-    @DeleteMapping("/{photoId}")
+    @DeleteMapping("photos/{photoId}")
     public ResponseEntity<Void> deletePhoto(
         @PathVariable UUID photoId,
         @AuthenticationPrincipal String userId

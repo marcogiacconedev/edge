@@ -1,8 +1,7 @@
 package com.backend.backend_java.dto;
 
-import java.time.LocalDate;
-
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class UpdateProjectRequest {
     @NotBlank(message = "Title missing")
@@ -11,11 +10,8 @@ public class UpdateProjectRequest {
     @NotBlank(message = "Description missing")
     private String description;
 
-    @NotBlank(message = "Order missing")
+    @NotNull(message = "Order missing")
     private Integer order;
-
-    @NotBlank(message = "Update date missing")
-    private LocalDate updatedAt;
 
     public String getDescription() {
         return description;
@@ -25,8 +21,5 @@ public class UpdateProjectRequest {
     }
     public String getTitle() {
         return title;
-    }
-    public LocalDate getUpdatedAt() {
-        return updatedAt;
     }
 }

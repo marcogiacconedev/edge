@@ -1,5 +1,6 @@
 package com.backend.backend_java.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -55,12 +56,12 @@ public class ProjectService {
 
     public ProjectResponse updateProject(UpdateProjectRequest dto, UUID projectId, UUID userId) {
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
-        if (!project.getId().equals(userId)) throw new RuntimeException("Not authorized");
+        if (!project.getUserId().equals(userId)) throw new RuntimeException("Not authorized");
 
         project.setTitle(dto.getTitle());
         project.setDescription(dto.getDescription());
         project.setOrder(dto.getOrder());
-        project.setUpdatedAt(dto.getUpdatedAt());
+        project.setUpdatedAt(LocalDate.now());
 
         projectRepository.save(project);
 
