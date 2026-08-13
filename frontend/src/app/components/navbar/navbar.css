@@ -88,3 +88,9 @@ a {
         font-size: 1.5rem;
     }
 } 
+
+@media (min-width: 1024px) {
+    nav {
+        height: 90px;
+    }
+}
