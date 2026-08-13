@@ -19,8 +19,10 @@ export const routes: Routes = [
   { path: 'reserved', component: ReservedLogin },
   { path: 'reserved/projects', component: ReservedProjects, canActivate: [AuthGuard] },
   { path: 'reserved/projects/:id', component: ReservedProjectForm, canActivate: [AuthGuard] },
+  { path: 'reserved/projects/new', component: ReservedProjectForm, canActivate: [AuthGuard] },
   { path: 'reserved/projects/:id/photos', component: ReservedPhotos, canActivate: [AuthGuard] },
   { path: 'reserved/projects/:id/photos/:photoId', component: ReservedPhotoForm, canActivate: [AuthGuard] },
+  { path: 'reserved/projects/:id/photos/new', component: ReservedPhotoForm, canActivate: [AuthGuard] },
   { path: 'reserved/not-found', component: NotFound, canActivate: [AuthGuard] },
   { path: '', component: Home },
   { path: '**', redirectTo: '' } // fallback 404 → Home

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Photo } from '../../model/model';
-import { Supabase } from '../../services/supabase-service/supabase';
 import { DatePipe, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -8,6 +7,9 @@ import { MapService } from '../../services/map-service/map-service';
 import { GoToProjects } from "../buttons/go-to-projects/go-to-projects";
 import { ModalWarning } from "../modal-warning/modal-warning";
 import { blankPhoto } from '../../utils/blank-objects';
+import { PhotoService } from '../../services/photo-service/photo-service';
+import { ProjectService } from '../../services/project-service/project-service';
+import { PhotoResponse } from '../../model/dto';
 
 @Component({
   selector: 'app-reserved-photos',
@@ -19,7 +21,7 @@ export class ReservedPhotos implements OnInit{
 
   photos: Photo[] = [];
   isPhotosLoading: boolean = true;
-  projectId!: number;
+  projectId!: string;
   photoToDelete: Photo = structuredClone(blankPhoto);
   deletePhotoMessage!: string;
   isModalOpen: boolean = false;
@@ -28,9 +30,9 @@ export class ReservedPhotos implements OnInit{
   deletionSuccessful: boolean = true;
 
   constructor(
-    private supabase: Supabase,
-    private router: Router,
-    private mapService: MapService
+    private photoService: PhotoService,
+    private projectService: ProjectService,
+    private router: Router
   ) { }  
 
   ngOnInit(): void {
@@ -39,20 +41,19 @@ export class ReservedPhotos implements OnInit{
     this.getProjectPhotos(this.projectId);
   }
 
-  getProjectIdFromUrl(): number {
+  getProjectIdFromUrl(): string {
     //estrae l' id del progetto a partire dall' url
     const urlSegments: string[] = this.router.url.split('/');
-    const lastUrlSegment: string | number = urlSegments[urlSegments.length - 2];
-    let projectId: number | null;
-    projectId = parseInt(lastUrlSegment);
+    const lastUrlSegment: string = urlSegments[urlSegments.length - 2];
+    let projectId: string = lastUrlSegment;
     return projectId
   }
 
-  async getProject(projectId: number): Promise<void> {
+  async getProject(projectId: string): Promise<void> {
     try {
-      const response = await this.supabase.getProjectById(projectId);
+      const response = await this.projectService.getProjectById(projectId);
       console.log(response);
-      if (response.data && response.data.length < 1) {
+      if (!response.id) {
         this.resourceNotFound();
         return
       }
@@ -61,12 +62,12 @@ export class ReservedPhotos implements OnInit{
     }
   }
 
-  async getProjectPhotos(projectId: number): Promise<void> {
+  async getProjectPhotos(projectId: string): Promise<void> {
     try {
       this.isPhotosLoading = true;
-      const response = await this.supabase.getPhotosByProjectId(projectId);
-      if (response.status === 200) {
-        this.photos = this.mapService.mapPhoto(response.data);
+      const response: PhotoResponse[] = await this.photoService.getPhotosByProjectId(projectId);
+      if (response.length) {
+        this.photos = response.map(photo => new Photo(photo));
       }
     } catch (error) {
       console.log(error);
@@ -110,16 +111,14 @@ export class ReservedPhotos implements OnInit{
     //cancellazione logica dei metadati
     try {
       this.isDeletionLoading = true;
-      const response = await this.supabase.deletePhoto(photo.id);
+      const response = await this.photoService.deletePhoto(photo.id);
       console.log(response);
-      if (response.status === 200) {
-        this.deletePhotoMessage = 'Eliminazione avventua con successo!';
-      } else {
-        this.deletePhotoMessage = 'Eliminazione non riuscita :(';
-        return
-      }
-      //cancellazione dell' immagine dallo storage
-      await this.supabase.deleteImage(photo.imageUrl);
+      // if (response) {
+      //   this.deletePhotoMessage = 'Eliminazione avventua con successo!';
+      // } else {
+      //   this.deletePhotoMessage = 'Eliminazione non riuscita :(';
+      //   return
+      // }
     } catch (error) {
       console.log(error);
     } finally {

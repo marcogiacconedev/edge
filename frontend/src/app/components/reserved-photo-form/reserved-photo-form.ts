@@ -8,6 +8,10 @@ import { GoToPhotos } from "../buttons/go-to-photos/go-to-photos";
 import { isOnlyNumbers } from '../../utils/utils';
 import { ModalCreation } from '../modal-creation/modal-creation';
 import { AuthService } from '../../services/auth-service/auth-service';
+import { PhotoService } from '../../services/photo-service/photo-service';
+import { PhotoResponse } from '../../model/dto';
+import dotenv from 'dotenv';
+dotenv.config();
 
 @Component({
   selector: 'app-reserved-photo-form',
@@ -19,8 +23,8 @@ export class ReservedPhotoForm implements OnInit {
 
   photo: Photo = structuredClone(blankPhoto);
   imageToAdd!: File;
-  projectId!: number;
-  photoId!: number | null;
+  projectId!: string;
+  photoId!: string;
   editMode: boolean = false;
   photoImageChanged: boolean = false;
   previewUrlFromPhoto!: string;
@@ -50,72 +54,51 @@ export class ReservedPhotoForm implements OnInit {
   ngOnInit(): void {
     if (this.photoId) {
       this.getPhoto(this.photoId);
-    } else {
-      this.getNewId();
     }
   }
 
   getPhotoIdAndModeFromUrl(): {
-    photoId: number | null,
+    photoId: string,
     editMode: boolean
   } {
     const urlSegments: string[] = this.router.url.split('/');
     const lastUrlSegment: string = urlSegments[urlSegments.length - 1];
-    let photoId: number | null;
+    let photoId: string;
     let editMode: boolean = false;
 
-    console.log(isOnlyNumbers(lastUrlSegment))
-
-    if (lastUrlSegment === 'create') {
-      photoId = null;
-    } else if (isOnlyNumbers(lastUrlSegment)) {
-      editMode = true;
-      photoId = parseInt(lastUrlSegment);
+    if (lastUrlSegment === 'new') {
+      photoId = "";
     } else {
-      photoId = null;
-      this.resourceNotFound();
-    }
+      editMode = true;
+      photoId = lastUrlSegment;
+    } 
 
     return { photoId, editMode }
   }
 
-  getProjectIdFromUrl(): number {
+  getProjectIdFromUrl(): string {
     //estrae l' id del progetto a partire dall' url
     const urlSegments: string[] = this.router.url.split('/');
-    const projectUrlSegment: string | number = urlSegments[urlSegments.length - 3];
-    let projectId: number | null;
-    projectId = parseInt(projectUrlSegment);
+    const projectUrlSegment: string = urlSegments[urlSegments.length - 3];
+    let projectId: string = projectUrlSegment;
     return projectId
   }
 
-  async getNewId(): Promise<void> {
-    const newId: number = await this.photoService.getNewPhotoId();
-    if (newId !== 0) {
-      this.photo.id = newId;
-    }
-  }
+  // async getNewId(): Promise<void> {
+  //   const newId: number = await this.photoService.getNewPhotoId();
+  //   if (newId !== 0) {
+  //     this.photo.id = newId;
+  //   }
+  // }
 
-  async getPhoto(photoId: number): Promise<void> {
-    //chiama progetto e controlla se esiste
-    try {
-      const response = await this.photoService.getProjectById(this.photo.projectId);
-      if (response && response.data && response.data[0]) {
-        this.projectId = response.data[0].id;
-      } else {
-        this.resourceNotFound();
-        return
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  async getPhoto(photoId: string): Promise<void> {
 
-    //chiama foto e controlla se esiste
     try {
-      const response = await this.photoService.getPhotoById(photoId);
-      if (response && response.data && response.data[0]) {
-        this.photo = this.mapService.mapPhoto(response.data)[0];
+      const response: PhotoResponse = await this.photoService.getPhotoById(photoId);
+      if (response.id) {
+        this.photo = new Photo(response);
         if (this.photo && this.photo.takenAt) {   //formatta la data in modo compatibile con il date picker del browser
-          this.photo.takenAt = new Date(this.photo.takenAt).toISOString().split('T')[0];
+          // this.photo.takenAt = new Date(this.photo.takenAt).toISOString().split('T')[0];
         }
       } else {
         this.resourceNotFound();
@@ -130,7 +113,7 @@ export class ReservedPhotoForm implements OnInit {
     } catch (error) {
       console.log(error);
     } finally {
-      this.previewUrlFromPhoto = this.photoService.getImagePublicUrl(this.photo?.imageUrl)
+      this.previewUrlFromPhoto = `${process.env['BASE_API_URL']}/api/photos/${this.photo.id}/file`;
     }
   }
 
@@ -156,29 +139,13 @@ export class ReservedPhotoForm implements OnInit {
     return isFormComplete;
   }
 
-  async uploadPhotoImage(): Promise<void> {
-    let imageUrl!: string;
-    if (this.imageToAdd) {
-      try {
-        imageUrl = await this.photoService.createImage(this.imageToAdd);
-        if (imageUrl) this.photo.imageUrl = imageUrl;
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  }
-
   async createNewPhoto(): Promise<void> {
-    await this.photoService.createNewPhoto(this.photo, this.photo.projectId);
-  }
-
-  async deletePhotoImage(): Promise<void> {
-    await this.photoService.deleteImage(this.photo.imageUrl);
+    await this.photoService.createPhoto(this.photo, this.photo.projectId, this.imageToAdd);
   }
 
   async editPhoto(): Promise<void> {
     try {
-      const response = await this.photoService.editPhoto(this.photo);
+      const response = await this.photoService.updatePhoto(this.photo, this.imageToAdd);
       console.log(response);
     } catch (error) {
       console.log(error);
@@ -200,14 +167,13 @@ export class ReservedPhotoForm implements OnInit {
     try {
       if (!this.editMode) {
         this.submitLoadingMessage = 'Creazione in corso';
-        await this.uploadPhotoImage();
+        // await this.uploadPhotoImage();
         await this.createNewPhoto();
         this.submitLoadingMessage = 'Creazione riuscita!';
       } else {
         this.submitLoadingMessage = 'Modifica in corso';
         if (this.photoImageChanged) {
-          await this.deletePhotoImage();
-          await this.uploadPhotoImage();
+          // await this.uploadPhotoImage();
         }
         await this.editPhoto();
         this.submitLoadingMessage = 'Modifica riuscita!'

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Project } from '../../model/model';
 import { Router } from '@angular/router';
-import { Supabase } from '../../services/supabase-service/supabase';
+import { ProjectService } from '../../services/project-service/project-service';
 
 @Component({
   selector: 'app-project-thumbnail',
@@ -10,23 +10,14 @@ import { Supabase } from '../../services/supabase-service/supabase';
   styleUrl: './project-thumbnail.css'
 })
 export class ProjectThumbnail {
-  coverImageUrl!: string;
   @Input() project!: Project;
+  coverImageUrl?: string = `${process.env['API_BASE_URL']}/api/projectthumbnails/${this.project.id}/file`;
 
   constructor(
-    private router: Router,
-    private supabase: Supabase
+    private router: Router
   ) { }
 
   goToProject(): void {
     this.router.navigateByUrl(`/projects/${this.project.id}`);
   }
-
-  getCoverImageUrl(coverImageFilePath: string): string {
-    let coverImageUrl: string = '';
-    coverImageUrl = this.supabase.getImagePublicUrl(coverImageFilePath);
-
-    return coverImageUrl;
-  }
-
 }

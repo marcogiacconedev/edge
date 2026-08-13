@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Supabase } from '../../services/supabase-service/supabase';
 import { Navbar } from "../navbar/navbar";
 import { Footer } from "../footer/footer";
 import { Photo, Project } from '../../model/model';
@@ -8,6 +7,9 @@ import { MapService } from '../../services/map-service/map-service';
 import { PhotoSpotlight } from '../photo-spotlight/photo-spotlight';
 import { emptyProject } from '../../utils/blank-objects';
 import { orderPhotoArray } from '../../utils/utils';
+import { ProjectService } from '../../services/project-service/project-service';
+import { PhotoService } from '../../services/photo-service/photo-service';
+import { PhotoResponse } from '../../model/dto';
 
 @Component({
   selector: 'app-project',
@@ -17,13 +19,13 @@ import { orderPhotoArray } from '../../utils/utils';
 })
 export class ProjectSpotlight implements OnInit{
 
-  projectId!: number;
+  projectId!: string;
   project: Project = structuredClone(emptyProject);
   photos!: Photo[];
   constructor(
     private router: Router,
-    private supabase: Supabase,
-    private mapSerivice: MapService
+    private projectService: ProjectService,
+    private photoService: PhotoService
   ) {}
 
   ngOnInit(): void {
@@ -35,13 +37,13 @@ export class ProjectSpotlight implements OnInit{
   getProjectIdFromUrl(): void {
     const urlSegments = this.router.url.split('/');
     const lastUrlSegment = urlSegments[urlSegments.length - 1];
-    this.projectId = parseInt(lastUrlSegment);
+    this.projectId = lastUrlSegment;
   }
   
   async getProject(): Promise<void> {
     try {
-      const response = await this.supabase.getProjectById(this.projectId);
-      this.project = this.mapSerivice.mapProject(response.data)[0];  
+      const response = await this.projectService.getProjectById(this.projectId);
+      this.project = new Project(response);  
     } catch (error) {
       console.log(error);
     }
@@ -49,8 +51,8 @@ export class ProjectSpotlight implements OnInit{
 
   async getPhotos(): Promise<void> {
     try {
-      const response = await this.supabase.getPhotosByProjectId(this.projectId);
-      this.photos = this.mapSerivice.mapPhoto(response.data);
+      const response: PhotoResponse[] = await this.photoService.getPhotosByProjectId(this.projectId);
+      this.photos = response.map(photoResponse => new Photo(photoResponse));
       this.photos = orderPhotoArray(this.photos);
     } catch (error) {
       console.log(error);

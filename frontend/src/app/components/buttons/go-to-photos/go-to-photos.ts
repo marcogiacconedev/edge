@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class GoToPhotos {
 
-  @Input() projectId!: number;
+  @Input() projectId!: string;
 
   constructor(
     private router: Router
