@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Project } from '../../model/model';
-import { MapService } from '../../services/map-service/map-service';
 import { DatePipe, NgClass } from '@angular/common';
 import { Router } from '@angular/router';
 import { ModalWarning } from "../modal-warning/modal-warning";

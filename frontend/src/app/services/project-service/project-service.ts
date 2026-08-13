@@ -1,9 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { Project } from '../../model/model';
-import dotenv from 'dotenv';
 import { AuthService } from '../auth-service/auth-service';
 import { CreateProjectRequest, CreateProjectThumbnailResponse, ProjectResponse, UpdateProjectRequest } from '../../model/dto';
-dotenv.config();
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +14,7 @@ export class ProjectService {
 
   public async getProjects(): Promise<ProjectResponse[]> {
     try {
-      const response = await fetch(`${process.env['API_BASE_URL']}/api/projects`,{
+      const response = await fetch(`${environment['API_BASE_URL']}/api/projects`,{
         headers: {
           "Authorization" : `Bearer ${this.token}`
         }
@@ -33,7 +32,7 @@ export class ProjectService {
 
   public async getProjectById(projectId: string): Promise<ProjectResponse> {
     try {
-      const response = await fetch(`${process.env['API_BASE_URL']}/api/projects/${projectId}`);
+      const response = await fetch(`${environment['API_BASE_URL']}/api/projects/${projectId}`);
 
       if (!response.ok) throw new Error('Unable to fetch the project');      
 
@@ -49,7 +48,7 @@ export class ProjectService {
     const requestBody = new CreateProjectRequest(project);
 
     try {
-      const response = await fetch(`${process.env['API_BASE_URL']}/api/projects`, {
+      const response = await fetch(`${environment['API_BASE_URL']}/api/projects`, {
         method: 'POST',
         headers: {
           "Authorization" : `Bearer ${localStorage.getItem('edgeJwt')}`,
@@ -70,7 +69,7 @@ export class ProjectService {
   public async editProject(project: Project): Promise<ProjectResponse> {
     const body = new UpdateProjectRequest(project);
     try {
-      const response = await fetch(`${process.env['API_BASE_URL']}/api/projects`, {
+      const response = await fetch(`${environment['API_BASE_URL']}/api/projects`, {
         method: 'PUT',
         headers: {
           "Authorization" : `Bearer ${localStorage.getItem('edgeJwt')}`,
@@ -90,7 +89,7 @@ export class ProjectService {
 
   public async deleteProject(projectId: string): Promise<void> {
     try {
-      const response = await fetch(`${process.env['API_BASE_URL']}/api/projects/${projectId}`, {
+      const response = await fetch(`${environment['API_BASE_URL']}/api/projects/${projectId}`, {
         headers: {
           "Authorization" : `Bearer ${this.token}`
         }        
@@ -107,7 +106,7 @@ export class ProjectService {
     const formData = new FormData();
     formData.append('file', image);
     try {
-      const response = await fetch(`${process.env['API_BASE_URL']}/api/projectthumbnails/${projectId}`, {
+      const response = await fetch(`${environment['API_BASE_URL']}/api/projectthumbnails/${projectId}`, {
         method: 'POST',
         headers: {
           "Authorization" : `Bearer ${localStorage.getItem('edgeJwt')}`          

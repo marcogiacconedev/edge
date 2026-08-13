@@ -1,8 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Photo } from '../../model/model';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { environment } from '../../../environments/environment.development';
 
 @Component({
   selector: 'app-photo-spotlight',
@@ -12,5 +10,5 @@ dotenv.config();
 })
 export class PhotoSpotlight {
   @Input() photo!: Photo;
-  photoUrl?: string = process.env['API_BASE_URL'];
+  photoUrl?: string = environment['API_BASE_URL'];
 }

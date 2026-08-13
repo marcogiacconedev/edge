@@ -1,9 +1,6 @@
 import { Injectable, signal } from '@angular/core';
-import dotenv from 'dotenv';
-import { User } from '../../model/model';
 import { LoginRequest, LoginResponse } from '../../model/dto';
-
-dotenv.config();
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +20,7 @@ export class AuthService {
 
   async login(dto: LoginRequest): Promise<LoginResponse> {
     try {
-      const response = await fetch(`${process.env['API_BASE_URL']}/auth/login`, {
+      const response = await fetch(`${environment['API_BASE_URL']}/auth/login`, {
         method: 'POST',
         headers: {
           "Content-Type" : "application/json"

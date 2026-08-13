@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Project } from '../../model/model';
 import { Router } from '@angular/router';
-import { ProjectService } from '../../services/project-service/project-service';
+import { environment } from '../../../environments/environment.development';
 
 @Component({
   selector: 'app-project-thumbnail',
@@ -11,7 +11,7 @@ import { ProjectService } from '../../services/project-service/project-service';
 })
 export class ProjectThumbnail {
   @Input() project!: Project;
-  coverImageUrl?: string = `${process.env['API_BASE_URL']}/api/projectthumbnails/${this.project.id}/file`;
+  coverImageUrl?: string = `${environment['API_BASE_URL']}/api/projectthumbnails/${this.project.id}/file`;
 
   constructor(
     private router: Router

@@ -10,8 +10,7 @@ import { ModalCreation } from '../modal-creation/modal-creation';
 import { AuthService } from '../../services/auth-service/auth-service';
 import { PhotoService } from '../../services/photo-service/photo-service';
 import { PhotoResponse } from '../../model/dto';
-import dotenv from 'dotenv';
-dotenv.config();
+import { environment } from '../../../environments/environment.development';
 
 @Component({
   selector: 'app-reserved-photo-form',
@@ -113,7 +112,7 @@ export class ReservedPhotoForm implements OnInit {
     } catch (error) {
       console.log(error);
     } finally {
-      this.previewUrlFromPhoto = `${process.env['BASE_API_URL']}/api/photos/${this.photo.id}/file`;
+      this.previewUrlFromPhoto = `${environment['API_BASE_URL']}/api/photos/${this.photo.id}/file`;
     }
   }
 

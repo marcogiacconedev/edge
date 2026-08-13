@@ -1,9 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { CreatePhotoRequest, PhotoResponse, UpdatePhotoRequest } from '../../model/dto';
-import dotenv from 'dotenv';
 import { AuthService } from '../auth-service/auth-service';
 import { Photo } from '../../model/model';
-dotenv.config();
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +20,7 @@ export class PhotoService {
     formData.append('file', file);
 
     try {
-      const response = await fetch(`${process.env['API_BASE_URL']}/api/projects/${projectId}/photos`, {
+      const response = await fetch(`${environment['API_BASE_URL']}/api/projects/${projectId}/photos`, {
         method: 'POST',
         headers: {
           "Content-Type" : "application/json",
@@ -42,7 +41,7 @@ export class PhotoService {
 
   public async getPhotoById(photoId: string): Promise<PhotoResponse> {
     try {
-      const response = await fetch(`${process.env['API_BASE_URL']}/api/photos/${photoId}`, {
+      const response = await fetch(`${environment['API_BASE_URL']}/api/photos/${photoId}`, {
         headers: {
           "Content-Type" : "application/json",
           "Authorization" : `Bearer ${this.authService.getToken()}`
@@ -60,7 +59,7 @@ export class PhotoService {
 
   public async getPhotosByProjectId(projectId: string): Promise<PhotoResponse[]> {
     try {
-      const response = await fetch(`${process.env['API_BASE_URL']}/api/projects/${projectId}/photos`);
+      const response = await fetch(`${environment['API_BASE_URL']}/api/projects/${projectId}/photos`);
       if (!response.ok) throw new Error('Unable to fetch the photos');
 
       const data: PhotoResponse[] = await response.json();
@@ -81,7 +80,7 @@ export class PhotoService {
     formData.append('file', file);
 
     try {
-      const response = await fetch(`${process.env['API_BASE_URL']}/api/photos/${photo.id}`, {
+      const response = await fetch(`${environment['API_BASE_URL']}/api/photos/${photo.id}`, {
         method: 'POST',
         headers: {
           "Content-Type" : "application/json",
@@ -102,7 +101,7 @@ export class PhotoService {
 
   public async deletePhoto(photoId: string): Promise<void> {
     try {
-      const response = await fetch(`${process.env['API_BASE_URL']}/api/photos/${photoId}`, {
+      const response = await fetch(`${environment['API_BASE_URL']}/api/photos/${photoId}`, {
         method: 'DELETE',
         headers: {
           "Content-Type" : "application/json",

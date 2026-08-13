@@ -9,8 +9,7 @@ import { isOnlyNumbers } from '../../utils/utils';
 import { ModalCreation } from '../modal-creation/modal-creation';
 import { ProjectService } from '../../services/project-service/project-service';
 import { CreateProjectThumbnailResponse, ProjectResponse } from '../../model/dto';
-import dotenv from 'dotenv';
-dotenv.config();
+import { environment } from '../../../environments/environment.development';
 
 @Component({
   selector: 'app-reserved-project-form',
@@ -119,7 +118,7 @@ export class ReservedProjectForm implements OnInit {
     if (this.imageToAdd) {
       try {
         const response: CreateProjectThumbnailResponse = await this.projectService.createProjectThumbnail(this.projectId!, this.imageToAdd); 
-        this.previewUrlFromProject = `${process.env['API_BASE_URL']}/api/projectthumbnails/${this.projectId}/file`;
+        this.previewUrlFromProject = `${environment['API_BASE_URL']}/api/projectthumbnails/${this.projectId}/file`;
       } catch (error) {
         console.log(error);
       }
