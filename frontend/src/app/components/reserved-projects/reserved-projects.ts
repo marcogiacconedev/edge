@@ -40,6 +40,7 @@ export class ReservedProjects implements OnInit {
     try {
       this.isProjectsLoading = true;
       const response: ProjectResponse[] = await this.projectService.getProjects();
+      console.log(response);
       this.projects = response.map(responseProject => {return new Project(responseProject)});
     } catch (error) {
       throw error;
@@ -53,7 +54,7 @@ export class ReservedProjects implements OnInit {
   }
 
   createNewProject(): void {
-    this.router.navigateByUrl('/reserved/projects/create');
+    this.router.navigateByUrl('/reserved/projects/new');
   }
 
   managePhotos(project: Project): void {

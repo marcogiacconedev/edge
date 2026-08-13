@@ -22,7 +22,7 @@ export class ReservedPhotoForm implements OnInit {
 
   photo: Photo = structuredClone(blankPhoto);
   imageToAdd!: File;
-  projectId!: string;
+  // projectId!: string;
   photoId!: string;
   editMode: boolean = false;
   photoImageChanged: boolean = false;
@@ -41,7 +41,6 @@ export class ReservedPhotoForm implements OnInit {
     private router: Router,
     private authService: AuthService,
     private photoService: PhotoService,
-    private mapService: MapService
   ) {
     this.photo = structuredClone(blankPhoto);
     this.photo.projectId = this.getProjectIdFromUrl();
@@ -83,37 +82,29 @@ export class ReservedPhotoForm implements OnInit {
     return projectId
   }
 
-  // async getNewId(): Promise<void> {
-  //   const newId: number = await this.photoService.getNewPhotoId();
-  //   if (newId !== 0) {
-  //     this.photo.id = newId;
-  //   }
-  // }
-
   async getPhoto(photoId: string): Promise<void> {
-
     try {
-      const response: PhotoResponse = await this.photoService.getPhotoById(photoId);
-      if (response.id) {
-        this.photo = new Photo(response);
-        if (this.photo && this.photo.takenAt) {   //formatta la data in modo compatibile con il date picker del browser
-          // this.photo.takenAt = new Date(this.photo.takenAt).toISOString().split('T')[0];
-        }
-      } else {
-        this.resourceNotFound();
-        return
-      }
-
-      //controlla che la foto appartenga al progetto
-      if (this.projectId !== this.photo.projectId) {
-        this.resourceNotFound();
-        return;
-      }
+      const photoResponse: PhotoResponse = await this.photoService.getPhotoById(photoId);
+      this.photo = new Photo(photoResponse);
+      this.imageToAdd = await this.getPhotoAsFile(photoId, `${photoId}-photo`);
     } catch (error) {
       console.log(error);
     } finally {
       this.previewUrlFromPhoto = `${environment['API_BASE_URL']}/api/photos/${this.photo.id}/file`;
     }
+  }
+
+  async getPhotoAsFile(photoId: string, filename: string): Promise<File> {
+    const response = await fetch(`${environment.API_BASE_URL}/api/photos/${photoId}/file`);
+
+    if (!response.ok) throw new Error('Unable to fetch the photo file');
+
+    const blob = await response.blob();
+
+    return new File([blob], filename, {
+      type: blob.type,
+      lastModified: Date.now()
+    });
   }
 
   onImageChange(event: any): void {
@@ -166,14 +157,10 @@ export class ReservedPhotoForm implements OnInit {
     try {
       if (!this.editMode) {
         this.submitLoadingMessage = 'Creazione in corso';
-        // await this.uploadPhotoImage();
         await this.createNewPhoto();
         this.submitLoadingMessage = 'Creazione riuscita!';
       } else {
         this.submitLoadingMessage = 'Modifica in corso';
-        if (this.photoImageChanged) {
-          // await this.uploadPhotoImage();
-        }
         await this.editPhoto();
         this.submitLoadingMessage = 'Modifica riuscita!'
       }

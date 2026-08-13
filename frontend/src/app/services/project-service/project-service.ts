@@ -14,11 +14,7 @@ export class ProjectService {
 
   public async getProjects(): Promise<ProjectResponse[]> {
     try {
-      const response = await fetch(`${environment['API_BASE_URL']}/api/projects`,{
-        headers: {
-          "Authorization" : `Bearer ${this.token}`
-        }
-      })
+      const response = await fetch(`${environment['API_BASE_URL']}/api/projects`)
 
       if (!response.ok) throw new Error('Unable to get projects');
 
@@ -51,7 +47,7 @@ export class ProjectService {
       const response = await fetch(`${environment['API_BASE_URL']}/api/projects`, {
         method: 'POST',
         headers: {
-          "Authorization" : `Bearer ${localStorage.getItem('edgeJwt')}`,
+          "Authorization" : `Bearer ${localStorage.getItem('edgeJWT')}`,
           "Content-Type" : "application/json"
         },
         body: JSON.stringify(requestBody)
@@ -69,10 +65,10 @@ export class ProjectService {
   public async editProject(project: Project): Promise<ProjectResponse> {
     const body = new UpdateProjectRequest(project);
     try {
-      const response = await fetch(`${environment['API_BASE_URL']}/api/projects`, {
+      const response = await fetch(`${environment['API_BASE_URL']}/api/projects/${project.id}`, {
         method: 'PUT',
         headers: {
-          "Authorization" : `Bearer ${localStorage.getItem('edgeJwt')}`,
+          "Authorization" : `Bearer ${localStorage.getItem('edgeJWT')}`,
           "Content-Type" : "application/json"        
         },
         body: JSON.stringify(body)
@@ -88,10 +84,13 @@ export class ProjectService {
   }
 
   public async deleteProject(projectId: string): Promise<void> {
+    console.log(projectId);
     try {
       const response = await fetch(`${environment['API_BASE_URL']}/api/projects/${projectId}`, {
+        method:'DELETE',
         headers: {
-          "Authorization" : `Bearer ${this.token}`
+          "Authorization" : `Bearer ${localStorage.getItem('edgeJWT')}`,
+          "Content-Type" : "application/json"
         }        
       })
 
@@ -109,7 +108,29 @@ export class ProjectService {
       const response = await fetch(`${environment['API_BASE_URL']}/api/projectthumbnails/${projectId}`, {
         method: 'POST',
         headers: {
-          "Authorization" : `Bearer ${localStorage.getItem('edgeJwt')}`          
+          "Authorization" : `Bearer ${localStorage.getItem('edgeJWT')}`          
+        },
+        body: formData
+      })
+
+      if (!response.ok) throw new Error('Unable to upload cover image');
+
+      const data: CreateProjectThumbnailResponse = await response.json();
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async updateProjectThumbnail(projectId: string, file: File): Promise<CreateProjectThumbnailResponse> {
+    console.log(localStorage.getItem('edgeJWT'));
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const response = await fetch(`${environment['API_BASE_URL']}/api/projectthumbnails/${projectId}`, {
+        method: 'PUT',
+        headers: {
+          "Authorization" : `Bearer ${localStorage.getItem('edgeJWT')}`          
         },
         body: formData
       })

@@ -46,8 +46,8 @@ public class PhotoController {
 
     // endpoint to get the file. Use it like <img src="/api/photos/123e4567-e89b-12d3-a456-426614174000/file" />
     @GetMapping("/photos/{photoId}/file")    
-    public ResponseEntity<byte[]> getPhotoFile(@PathVariable UUID photoId, @AuthenticationPrincipal String userId) {
-        Photo photo = photoService.getPhotoEntity(photoId, UUID.fromString(userId));
+    public ResponseEntity<byte[]> getPhotoFile(@PathVariable UUID photoId) {
+        Photo photo = photoService.getPhotoEntity(photoId);
         return ResponseEntity.ok()
             .contentType(MediaType.parseMediaType(photo.getPhotoType()))
             .body(photo.getPhoto());

@@ -52,7 +52,6 @@ export class ReservedPhotos implements OnInit{
   async getProject(projectId: string): Promise<void> {
     try {
       const response = await this.projectService.getProjectById(projectId);
-      console.log(response);
       if (!response.id) {
         this.resourceNotFound();
         return
@@ -77,11 +76,12 @@ export class ReservedPhotos implements OnInit{
   }
 
   editPhoto(photo: Photo): void {
+    console.log(this.projectId, photo.id)
     this.router.navigateByUrl(`/reserved/projects/${this.projectId}/photos/${photo.id}`)
   }
 
   addNewPhoto(): void {
-    this.router.navigateByUrl(`reserved/projects/${this.projectId}/photos/create`);
+    this.router.navigateByUrl(`reserved/projects/${this.projectId}/photos/new`);
   }
 
   openWarningModal(photo: Photo): void {

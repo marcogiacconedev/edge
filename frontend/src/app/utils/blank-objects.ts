@@ -5,8 +5,8 @@ export const blankPhoto: Photo = {
     projectId: '',
     title: '',
     description: '',
-    takenAt: new Date(0),
-    updatedAt: new Date(0),
+    takenAt: new Date(),
+    updatedAt: new Date(),
     order: 0,
     place: '',
     photoType: ''
@@ -17,8 +17,8 @@ export const emptyProject: Project = {
     userId: "",
     title: '',
     description: '',
-    createdAt: new Date(0), // data minima come placeholder
-    updatedAt: new Date(0),
+    createdAt: new Date(), // data minima come placeholder
+    updatedAt: new Date(),
     order: 0,
 };
 

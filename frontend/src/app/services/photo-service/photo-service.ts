@@ -23,8 +23,7 @@ export class PhotoService {
       const response = await fetch(`${environment['API_BASE_URL']}/api/projects/${projectId}/photos`, {
         method: 'POST',
         headers: {
-          "Content-Type" : "application/json",
-          "Authorization" : `Bearer ${this.authService.getToken()}`
+          "Authorization" : `Bearer ${localStorage.getItem('edgeJWT')}`
         },
         body: formData
       })
@@ -44,7 +43,7 @@ export class PhotoService {
       const response = await fetch(`${environment['API_BASE_URL']}/api/photos/${photoId}`, {
         headers: {
           "Content-Type" : "application/json",
-          "Authorization" : `Bearer ${this.authService.getToken()}`
+          "Authorization" : `Bearer ${localStorage.getItem('edgeJWT')}`
         }
       })
 
@@ -81,10 +80,9 @@ export class PhotoService {
 
     try {
       const response = await fetch(`${environment['API_BASE_URL']}/api/photos/${photo.id}`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
-          "Content-Type" : "application/json",
-          "Authorization" : `Bearer ${this.authService.getToken()}`
+          "Authorization" : `Bearer ${localStorage.getItem('edgeJWT')}`
         },
         body: formData
       })

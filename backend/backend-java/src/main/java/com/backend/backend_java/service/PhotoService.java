@@ -36,11 +36,8 @@ public class PhotoService {
         return new PhotoResponse(photo);       
     }
 
-    public Photo getPhotoEntity(UUID photoId, UUID userId) {
+    public Photo getPhotoEntity(UUID photoId) {
         Photo photo = photoRepository.findById(photoId).orElseThrow(() -> new RuntimeException("Photo not found"));
-        Project project = projectRepository.findById(photo.getProjectId()).orElseThrow(() -> new RuntimeException("Project not found"));
-        if (!project.getUserId().equals(userId)) throw new RuntimeException("Not authorized");
-
         return photo;
     }
 

@@ -11,8 +11,8 @@ public class ProjectResponse {
     private String title;
     private String description;
     private Integer order;
-    private LocalDate createdAd;
-    private LocalDate updatedAd;
+    private LocalDate createdAt;
+    private LocalDate updatedAt;
 
     public ProjectResponse(Project project) {
         this.id = project.getId();
@@ -20,15 +20,15 @@ public class ProjectResponse {
         this.title = project.getTitle();
         this.description = project.getDescription();
         this.order = project.getOrder();
-        this.createdAd = project.getCreatedAt();
-        this.updatedAd = project.getUpdatedAt();
+        this.createdAt = project.getCreatedAt();
+        this.updatedAt = project.getUpdatedAt();
     }
 
-    public LocalDate getCreatedAd() {
-        return createdAd;
+    public LocalDate getCreatedAt() {
+        return createdAt;
     }
-    public void setCreatedAd(LocalDate createdAd) {
-        this.createdAd = createdAd;
+    public void setCreatedAd(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
     public String getDescription() {
         return description;
@@ -54,11 +54,11 @@ public class ProjectResponse {
     public void setTitle(String title) {
         this.title = title;
     }
-    public LocalDate getUpdatedAd() {
-        return updatedAd;
+    public LocalDate getUpdatedAt() {
+        return updatedAt;
     }
-    public void setUpdatedAd(LocalDate updatedAd) {
-        this.updatedAd = updatedAd;
+    public void setUpdatedAt(LocalDate updatedAt) {
+        this.updatedAt = updatedAt;
     }
     public UUID getUserId() {
         return userId;

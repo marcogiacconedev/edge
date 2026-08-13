@@ -9,13 +9,17 @@ import { environment } from '../../../environments/environment.development';
   templateUrl: './project-thumbnail.html',
   styleUrl: './project-thumbnail.css'
 })
-export class ProjectThumbnail {
+export class ProjectThumbnail implements OnInit {
   @Input() project!: Project;
-  coverImageUrl?: string = `${environment['API_BASE_URL']}/api/projectthumbnails/${this.project.id}/file`;
+  coverImageUrl?: string;
 
   constructor(
     private router: Router
-  ) { }
+  ) {}
+
+  ngOnInit(): void {
+    this.coverImageUrl = `${environment['API_BASE_URL']}/api/projectthumbnails/${this.project.id}/file`;
+  }
 
   goToProject(): void {
     this.router.navigateByUrl(`/projects/${this.project.id}`);

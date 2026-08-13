@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Navbar } from "../navbar/navbar";
 import { Footer } from "../footer/footer";
 import { Project } from '../../model/model';
-import { MapService } from '../../services/map-service/map-service';
 import { ProjectThumbnail } from '../project-thumbnail/project-thumbnail';
 import { orderProjectArray } from '../../utils/utils';
 import { ProjectService } from '../../services/project-service/project-service';
@@ -30,6 +29,7 @@ export class ProjectsHome implements OnInit {
     try {
       const response: ProjectResponse[] = await this.projectService.getProjects();
       this.projects = response.map(responseProject => {return new Project(responseProject)});
+      console.log(this.projects);
     } catch (error) {
       throw error;
     } 

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Photo } from '../../model/model';
 import { environment } from '../../../environments/environment.development';
 
@@ -8,7 +8,11 @@ import { environment } from '../../../environments/environment.development';
   templateUrl: './photo-spotlight.html',
   styleUrl: './photo-spotlight.css'
 })
-export class PhotoSpotlight {
+export class PhotoSpotlight implements OnInit {
   @Input() photo!: Photo;
-  photoUrl?: string = environment['API_BASE_URL'];
+  photoUrl?: string;
+
+  ngOnInit(): void {
+    this.photoUrl = `${environment['API_BASE_URL']}/api/photos/${this.photo.id}/file`;
+  }
 }

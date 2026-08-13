@@ -3,9 +3,7 @@ import { Router } from '@angular/router';
 import { Photo, Project } from '../../model/model';
 import { FormsModule } from '@angular/forms';
 import { emptyProject } from '../../utils/blank-objects';
-import { MapService } from '../../services/map-service/map-service';
 import { GoToProjects } from "../buttons/go-to-projects/go-to-projects";
-import { isOnlyNumbers } from '../../utils/utils';
 import { ModalCreation } from '../modal-creation/modal-creation';
 import { ProjectService } from '../../services/project-service/project-service';
 import { CreateProjectThumbnailResponse, ProjectResponse } from '../../model/dto';
@@ -56,32 +54,48 @@ export class ReservedProjectForm implements OnInit {
     const urlSegments = this.router.url.split('/');
     const lastUrlSegment: string | number = urlSegments[urlSegments.length - 1];
     let projectId: string;
-    let editMode: boolean = false;
+    let editMode: boolean = true;
 
     if (lastUrlSegment === 'new') {
       projectId = "";
+      editMode = false;
     } else {
       projectId = lastUrlSegment
     }
-
     return { projectId, editMode };
   }
 
   async getProject(projectId: string): Promise<void> {
     try {
-      const response: ProjectResponse = await this.projectService.getProjectById(projectId);
-      this.project = new Project(response);
+      const projectResponse: ProjectResponse = await this.projectService.getProjectById(projectId);
+      this.project = new Project(projectResponse);
+      this.imageToAdd = await this.getPhotoAsFile(projectId, `${projectId}-thumbnail`);
     } catch (error) {
       console.log(error);
     } finally {
-      // this.previewUrlFromProject = ; 
+      this.previewUrlFromProject = `${environment.API_BASE_URL}/api/projectthumbnails/${this.project.id}/file`; 
     }
   }
 
+  async getPhotoAsFile(projectId: string, filename: string): Promise<File> {
+    const response = await fetch(`${environment.API_BASE_URL}/api/projectthumbnails/${projectId}/file`);
+
+    if (!response.ok) throw new Error('Unable to fetch the photo file');
+
+    const blob = await response.blob();
+
+    return new File([blob], filename, {
+      type: blob.type,
+      lastModified: Date.now()
+    });
+  }
+  
   async editProject(): Promise<void> {
     try {
-      const response: ProjectResponse = await this.projectService.editProject(this.project);
-      if (response.id) {
+      const projectResponse: ProjectResponse = await this.projectService.editProject(this.project);
+      this.project = new Project(projectResponse);
+      const thumbnailResponse = await this.projectService.updateProjectThumbnail(this.project.id, this.imageToAdd);
+      if (projectResponse.id) {
         this.messageOnSubmit = 'Modifica avvenuta con successo';
       } else {
         this.messageOnSubmit = 'Modifica del progetto non riuscita :(';
@@ -93,8 +107,10 @@ export class ReservedProjectForm implements OnInit {
 
   async createNewProject(): Promise<void> {
     try {
-      const response: ProjectResponse = await this.projectService.createProject(this.project);
-      if (response.id) {
+      const projectResponse: ProjectResponse = await this.projectService.createProject(this.project);
+      this.project = new Project(projectResponse);
+      const thumbnailResponse: CreateProjectThumbnailResponse = await this.projectService.createProjectThumbnail(this.project.id, this.imageToAdd)
+      if (projectResponse.id) {
         this.messageOnSubmit = 'Creazione progetto andata a buon fine';
       } else {
         this.messageOnSubmit = 'Creazione progetto non riuscita :(';
@@ -147,19 +163,16 @@ export class ReservedProjectForm implements OnInit {
   }
 
   async submit(): Promise<void> {
+    console.log(this.editMode);
     this.isSubmitModalOpen = true;
     this.isSubmitLoading = true;
     try {
       if (!this.editMode) {
         this.submitLoadingMessage = 'Creazione in corso';
         await this.createNewProject();
-        await this.uploadCoverImage();
         this.submitLoadingMessage = 'Creazione riuscita';
       } else {
-        this.submitLoadingMessage = 'Modifica in corsa'
-        if (this.coverImageChanged) {          
-          await this.uploadCoverImage();
-        } 
+        this.submitLoadingMessage = 'Modifica in corso'
         await this.editProject();
         this.submitLoadingMessage = 'Modifica riuscita';
       }
